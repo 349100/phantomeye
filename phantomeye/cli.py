@@ -24,7 +24,6 @@ from .utils.reporter import Reporter
 
 console = Console()
 
-
 @click.group(invoke_without_command=True)
 @click.option("--version", is_flag=True, help="Show version and exit")
 @click.pass_context
@@ -40,11 +39,6 @@ def cli(ctx, version):
     if ctx.invoked_subcommand is None:
         print_banner()
         console.print(ctx.get_help())
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# USERNAME COMMAND
-# ─────────────────────────────────────────────────────────────────────────────
 
 @cli.command("username")
 @click.argument("target")
@@ -83,11 +77,6 @@ def username_cmd(target, output, no_ai, timeout):
     reporter.save(results, ai_summary, output)
     db.close()
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# EMAIL COMMAND
-# ─────────────────────────────────────────────────────────────────────────────
-
 @cli.command("email")
 @click.argument("target")
 @click.option("--output", "-o", type=click.Choice(["json", "html", "both"]), default="json")
@@ -117,11 +106,6 @@ def email_cmd(target, output, no_ai):
 
     Reporter(session_id, target, "email").save(results, ai_summary, output)
     db.close()
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# IP COMMAND
-# ─────────────────────────────────────────────────────────────────────────────
 
 @cli.command("ip")
 @click.argument("target")
@@ -154,11 +138,6 @@ def ip_cmd(target, output, no_ai, shodan):
     Reporter(session_id, target, "ip").save(results, ai_summary, output)
     db.close()
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# DOMAIN COMMAND
-# ─────────────────────────────────────────────────────────────────────────────
-
 @cli.command("domain")
 @click.argument("target")
 @click.option("--output", "-o", type=click.Choice(["json", "html", "both"]), default="json")
@@ -190,11 +169,6 @@ def domain_cmd(target, output, no_ai, subdomains):
     Reporter(session_id, target, "domain").save(results, ai_summary, output)
     db.close()
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# PHONE COMMAND
-# ─────────────────────────────────────────────────────────────────────────────
-
 @cli.command("phone")
 @click.argument("target")
 @click.option("--output", "-o", type=click.Choice(["json", "html", "both"]), default="json")
@@ -225,11 +199,6 @@ def phone_cmd(target, output, no_ai):
     Reporter(session_id, target, "phone").save(results, ai_summary, output)
     db.close()
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# HISTORY COMMAND
-# ─────────────────────────────────────────────────────────────────────────────
-
 @cli.command("history")
 @click.option("--limit", default=20, help="Number of sessions to display")
 def history_cmd(limit):
@@ -248,11 +217,6 @@ def history_cmd(limit):
         table.add_row(str(s["id"]), s["target_type"], s["target"], s["created_at"])
 
     console.print(table)
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# CONFIG COMMAND
-# ─────────────────────────────────────────────────────────────────────────────
 
 @cli.command("config")
 @click.option("--anthropic-key", help="Set Anthropic API key")
@@ -282,11 +246,6 @@ def config_cmd(anthropic_key, hibp_key, shodan_key, hunter_key, numverify_key, s
 
     cfg.save()
     console.print("[bold green]✓[/bold green] Configuration saved.")
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# DISPLAY HELPERS
-# ─────────────────────────────────────────────────────────────────────────────
 
 def _display_username_results(target: str, results: dict):
     found = [p for p, d in results.get("platforms", {}).items() if d.get("found")]

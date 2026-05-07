@@ -32,8 +32,6 @@ class EmailRecon:
         self.session = requests.Session()
         self.session.headers.update(HEADERS)
 
-    # ── validation ─────────────────────────────────────────────────────────────
-
     def _validate_format(self, email: str) -> dict:
         pattern = r"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
         return {"valid_format": bool(re.match(pattern, email))}
@@ -64,8 +62,6 @@ class EmailRecon:
             info["domain_reachable"] = False
 
         return info
-
-    # ── HIBP ───────────────────────────────────────────────────────────────────
 
     def _check_hibp(self, email: str) -> dict:
         if not self.hibp_key:
@@ -105,8 +101,6 @@ class EmailRecon:
         except Exception as e:
             return {"error": str(e)}
 
-    # ── Hunter.io ──────────────────────────────────────────────────────────────
-
     def _check_hunter(self, email: str) -> dict:
         if not self.hunter_key:
             return {"error": "No Hunter.io API key configured"}
@@ -135,8 +129,6 @@ class EmailRecon:
         except Exception as e:
             return {"error": str(e)}
 
-    # ── social footprint (free, no API needed) ─────────────────────────────────
-
     def _social_footprint(self, email: str) -> dict:
         """Check if email is referenced on Gravatar and similar public services."""
         import hashlib
@@ -163,8 +155,6 @@ class EmailRecon:
             result["gravatar"] = {"profile_found": False}
 
         return result
-
-    # ── main ───────────────────────────────────────────────────────────────────
 
     def run(self, email: str) -> dict:
         results: dict = {"target": email}

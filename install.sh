@@ -11,7 +11,7 @@ GREEN='\033[0;32m'
 CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
 BOLD='\033[1m'
-NC='\033[0m'   # No Color
+NC='\033[0m'  
 
 PYTHON_MIN="3.9"
 
@@ -35,7 +35,7 @@ success() { echo -e "${GREEN}[✓]${NC} $*"; }
 warn()    { echo -e "${YELLOW}[!]${NC} $*"; }
 error()   { echo -e "${RED}[✗]${NC} $*"; exit 1; }
 
-# ── pre-flight checks ─────────────────────────────────────────────────────────
+
 
 check_root() {
     if [[ $EUID -ne 0 ]]; then
@@ -62,8 +62,6 @@ check_python() {
     fi
 }
 
-# ── system dependencies ───────────────────────────────────────────────────────
-
 install_system_deps() {
     info "Updating package lists…"
     apt-get update -qq
@@ -84,8 +82,6 @@ install_system_deps() {
     success "System dependencies installed"
 }
 
-# ── Python virtual environment ────────────────────────────────────────────────
-
 setup_venv() {
     INSTALL_DIR="/opt/phantomeye"
     info "Creating installation directory: $INSTALL_DIR"
@@ -103,8 +99,6 @@ setup_venv() {
     success "Python environment ready"
 }
 
-# ── CLI wrapper ───────────────────────────────────────────────────────────────
-
 install_cli_wrapper() {
     WRAPPER="/usr/local/bin/phantomeye"
     info "Installing CLI wrapper to $WRAPPER…"
@@ -117,8 +111,6 @@ WRAPPER_EOF
     chmod +x "$WRAPPER"
     success "CLI wrapper installed → phantomeye"
 }
-
-# ── initial config ────────────────────────────────────────────────────────────
 
 setup_config() {
     CONFIG_DIR="$HOME/.phantomeye"
@@ -134,8 +126,6 @@ setup_config() {
     fi
 }
 
-# ── verify installation ───────────────────────────────────────────────────────
-
 verify() {
     if phantomeye --version &>/dev/null; then
         success "PhantomEye installed successfully!"
@@ -143,8 +133,6 @@ verify() {
         error "Installation verification failed. Check the logs above."
     fi
 }
-
-# ── print usage ───────────────────────────────────────────────────────────────
 
 print_usage() {
     echo ""
@@ -165,8 +153,6 @@ print_usage() {
     echo -e "${YELLOW}⚠ For authorized security research only. Always operate within legal boundaries.${NC}"
     echo ""
 }
-
-# ── main ─────────────────────────────────────────────────────────────────────
 
 main() {
     banner

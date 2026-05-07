@@ -24,7 +24,6 @@ HEADERS = {
     )
 }
 
-# Common subdomains to brute-force enumerate
 COMMON_SUBDOMAINS = [
     "www", "mail", "smtp", "pop", "imap", "ftp", "ns1", "ns2",
     "dev", "staging", "api", "cdn", "static", "assets", "admin",
@@ -34,7 +33,6 @@ COMMON_SUBDOMAINS = [
     "m", "mobile", "app", "web", "secure", "login", "auth",
 ]
 
-# Technology fingerprints (header/body signatures → technology name)
 TECH_SIGNATURES = {
     "X-Powered-By": {
         r"PHP": "PHP",
@@ -83,8 +81,6 @@ class DomainRecon:
         self.session = requests.Session()
         self.session.headers.update(HEADERS)
 
-    # ── WHOIS ──────────────────────────────────────────────────────────────────
-
     def _whois(self, domain: str) -> dict:
         try:
             import whois as pythonwhois
@@ -115,8 +111,6 @@ class DomainRecon:
         except Exception as e:
             return {"error": str(e)}
 
-    # ── DNS records ────────────────────────────────────────────────────────────
-
     def _dns_records(self, domain: str) -> dict:
         records: dict = {}
         try:
@@ -139,8 +133,6 @@ class DomainRecon:
                 records["error"] = "DNS resolution failed"
 
         return records
-
-    # ── SSL certificate ────────────────────────────────────────────────────────
 
     def _ssl_cert(self, domain: str) -> dict:
         try:
@@ -177,8 +169,6 @@ class DomainRecon:
         except Exception as e:
             return {"error": str(e)}
 
-    # ── HTTP headers & tech fingerprint ────────────────────────────────────────
-
     def _http_probe(self, domain: str) -> dict:
         result: dict = {"headers": {}, "technologies": [], "redirect_chain": [], "status_code": None}
         for scheme in ("https", "http"):
@@ -214,8 +204,6 @@ class DomainRecon:
 
         return result
 
-    # ── subdomain enumeration ──────────────────────────────────────────────────
-
     def _enumerate_subdomains(self, domain: str) -> dict:
         found = []
         for sub in COMMON_SUBDOMAINS:
@@ -226,8 +214,6 @@ class DomainRecon:
             except Exception:
                 continue
         return {"found": found, "checked": len(COMMON_SUBDOMAINS)}
-
-    # ── main ───────────────────────────────────────────────────────────────────
 
     def run(self, domain: str, enumerate_subdomains: bool = False) -> dict:
         # Strip protocol if given

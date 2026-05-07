@@ -29,8 +29,6 @@ class Config:
     reports_dir:       str = str(Path.home() / ".phantomeye" / "reports")
     db_path:           str = str(Path.home() / ".phantomeye" / "phantomeye.db")
 
-    # ── serialisation ─────────────────────────────────────────────────────────
-
     @classmethod
     def load(cls) -> "Config":
         CONFIG_DIR.mkdir(parents=True, exist_ok=True)
@@ -44,7 +42,6 @@ class Config:
             except Exception:
                 pass
 
-        # Try environment variables as fallback
         obj = cls()
         obj.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY", "")
         obj.hibp_api_key      = os.getenv("HIBP_API_KEY", "")
@@ -57,8 +54,6 @@ class Config:
         CONFIG_DIR.mkdir(parents=True, exist_ok=True)
         with open(CONFIG_FILE, "w") as f:
             json.dump(asdict(self), f, indent=2)
-
-    # ── display ───────────────────────────────────────────────────────────────
 
     def display(self):
         table = Table(title="PhantomEye Configuration", box=box.ROUNDED, border_style="cyan")

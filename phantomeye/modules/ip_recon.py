@@ -22,8 +22,6 @@ class IPRecon:
         self.session = requests.Session()
         self.session.headers.update(HEADERS)
 
-    # ── validators ─────────────────────────────────────────────────────────────
-
     def _is_valid_ip(self, ip: str) -> bool:
         try:
             ipaddress.ip_address(ip)
@@ -36,8 +34,6 @@ class IPRecon:
             return ipaddress.ip_address(ip).is_private
         except ValueError:
             return False
-
-    # ── ipinfo.io (free, 50k req/month) ────────────────────────────────────────
 
     def _ipinfo(self, ip: str) -> dict:
         try:
@@ -58,8 +54,6 @@ class IPRecon:
             return {"error": f"ipinfo.io returned {resp.status_code}"}
         except Exception as e:
             return {"error": str(e)}
-
-    # ── ip-api.com (free, 45 req/min) ─────────────────────────────────────────
 
     def _ipapi(self, ip: str) -> dict:
         try:
@@ -97,8 +91,6 @@ class IPRecon:
         except Exception as e:
             return {"error": str(e)}
 
-    # ── AbuseIPDB ─────────────────────────────────────────────────────────────
-
     def _abuse_score(self, ip: str) -> dict:
         """Free tier: 1000 req/day without API key for basic check."""
         try:
@@ -124,16 +116,12 @@ class IPRecon:
         except Exception as e:
             return {"error": str(e)}
 
-    # ── reverse DNS ───────────────────────────────────────────────────────────
-
     def _reverse_dns(self, ip: str) -> dict:
         try:
             hostname = socket.gethostbyaddr(ip)[0]
             return {"hostname": hostname}
         except Exception:
             return {"hostname": None}
-
-    # ── Shodan ────────────────────────────────────────────────────────────────
 
     def _shodan_scan(self, ip: str) -> dict:
         if not self.shodan_key:
@@ -171,8 +159,6 @@ class IPRecon:
             return {"error": f"Shodan returned {resp.status_code}"}
         except Exception as e:
             return {"error": str(e)}
-
-    # ── main ───────────────────────────────────────────────────────────────────
 
     def run(self, ip: str) -> dict:
         results: dict = {"target": ip}

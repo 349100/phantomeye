@@ -14,7 +14,6 @@ console = Console()
 
 HEADERS = {"User-Agent": "PhantomEye-OSINT/1.0"}
 
-# Country calling code → country name (partial list)
 CC_MAP = {
     "1":  "United States / Canada",
     "7":  "Russia / Kazakhstan",
@@ -87,8 +86,6 @@ class PhoneRecon:
         self.session = requests.Session()
         self.session.headers.update(HEADERS)
 
-    # ── basic parse ────────────────────────────────────────────────────────────
-
     def _parse_number(self, number: str) -> dict:
         # Remove all non-digit characters except leading +
         cleaned = re.sub(r"[^\d+]", "", number)
@@ -117,8 +114,6 @@ class PhoneRecon:
             "country":          country,
             "format_e164":      f"+{digits_only}" if is_international else None,
         }
-
-    # ── phonenumbers library (if installed) ────────────────────────────────────
 
     def _phonenumbers_parse(self, number: str) -> dict:
         try:
@@ -158,8 +153,6 @@ class PhoneRecon:
         except Exception as e:
             return {"error": str(e)}
 
-    # ── NumVerify API ──────────────────────────────────────────────────────────
-
     def _numverify(self, number: str) -> dict:
         if not self.numverify_key:
             return {"note": "No NumVerify API key configured — add with: phantomeye config --numverify-key KEY"}
@@ -192,8 +185,6 @@ class PhoneRecon:
         except Exception as e:
             return {"error": str(e)}
 
-    # ── OSINT presence (search-based) ──────────────────────────────────────────
-
     def _osint_dorks(self, number: str) -> dict:
         """Generate Google dork URLs for manual investigation."""
         e164 = number if number.startswith("+") else f"+{number}"
@@ -209,8 +200,6 @@ class PhoneRecon:
             "whitepages":       f"https://www.whitepages.com/phone/{national}",
         }
         return {"dorks": dorks, "note": "Open these URLs in a browser for manual OSINT"}
-
-    # ── main ───────────────────────────────────────────────────────────────────
 
     def run(self, number: str) -> dict:
         results: dict = {"target": number}

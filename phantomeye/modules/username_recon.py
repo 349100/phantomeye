@@ -15,7 +15,6 @@ from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskPr
 
 console = Console()
 
-# Platform definitions: name → {url_template, check_type, expected_text/status}
 PLATFORMS = {
     "GitHub":        {"url": "https://github.com/{}", "check": "status", "code": 200},
     "GitLab":        {"url": "https://gitlab.com/{}", "check": "status", "code": 200},

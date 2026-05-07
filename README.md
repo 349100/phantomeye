@@ -1,6 +1,6 @@
 # 👁 PhantomEye
 
-> **AI-Powered OSINT Intelligence Framework**  
+> AI-Powered OSINT Intelligence Framework 
 > Reconnaissance. Intelligence. Precision.
 
 ```
@@ -23,24 +23,23 @@
 
 | Module | Capability |
 |--------|-----------|
-| 👤 **Username** | Enumerate a username across **30+ platforms** concurrently |
-| 📧 **Email** | HaveIBeenPwned breach check, Gravatar footprint, domain validation |
-| 🌐 **IP** | Geolocation, ASN, reverse DNS, AbuseIPDB score, optional Shodan scan |
-| 🔍 **Domain** | WHOIS, DNS records, SSL certificate, HTTP headers, tech fingerprinting, subdomain enum |
-| 📱 **Phone** | Carrier lookup, region analysis, line type, OSINT dork generation |
-| 🤖 **AI Analyst** | Claude-powered intelligence synthesis with actionable reports |
-| 💾 **Persistence** | SQLite session history, JSON & HTML report export |
+| 👤 Username | Enumerate a username across 30+ platforms concurrently |
+| 📧 Email | HaveIBeenPwned breach check, Gravatar footprint, domain validation |
+| 🌐 IP | Geolocation, ASN, reverse DNS, AbuseIPDB score, optional Shodan scan |
+| 🔍 Domain | WHOIS, DNS records, SSL certificate, HTTP headers, tech fingerprinting, subdomain enum |
+| 📱 Phone | Carrier lookup, region analysis, line type, OSINT dork generation |
+| 🤖 AI Analyst | Claude-powered intelligence synthesis with actionable reports |
+| 💾 Persistence | SQLite session history, JSON & HTML report export |
 
 ---
 
 ## 🚀 Installation (Kali Linux)
 
 ```bash
-# Clone the repository
+
 git clone https://github.com/349100/phantomeye.git
 cd phantomeye
 
-# One-command install (sets up venv + CLI wrapper)
 chmod +x install.sh
 sudo ./install.sh
 ```
@@ -51,40 +50,37 @@ sudo ./install.sh
 git clone https://github.com/349100/phantomeye.git
 cd phantomeye
 
-# Create virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# Install dependencies
 pip install -r requirements.txt
 pip install -e .
 
-# Run directly
 python -m phantomeye.cli --help
-# or after pip install -e .:
+
 phantomeye --help
-```
+
 
 ---
 
 ## ⚙️ Configuration
 
-```bash
-# Set your Anthropic API key (enables AI analysis)
+   bash
+
 phantomeye config --anthropic-key sk-ant-...
 
-# Set optional API keys for richer data
+
 phantomeye config --hibp-key YOUR_HIBP_KEY          # haveibeenpwned.com
 phantomeye config --shodan-key YOUR_SHODAN_KEY       # shodan.io
 phantomeye config --hunter-key YOUR_HUNTER_KEY       # hunter.io
 phantomeye config --numverify-key YOUR_NUMVERIFY_KEY # numverify.com
 
-# View current config (keys are masked)
-phantomeye config --show
-```
 
-**Environment variables are also supported:**
-```bash
+phantomeye config --show
+
+
+Environment variables are also supported:
+   bash
 export ANTHROPIC_API_KEY="sk-ant-..."
 export HIBP_API_KEY="..."
 export SHODAN_API_KEY="..."
@@ -98,7 +94,7 @@ Config is stored at `~/.phantomeye/config.json`.
 
 ### Username Enumeration
 
-```bash
+   bash
 # Basic scan
 phantomeye username johndoe
 
@@ -110,16 +106,16 @@ phantomeye username johndoe --output both --no-ai
 
 # Custom timeout (seconds per request)
 phantomeye username johndoe --timeout 15
-```
+
 
 ### Email OSINT
 
-```bash
+   bash
 phantomeye email target@example.com
 phantomeye email target@example.com --output html
-```
 
-**What it checks:**
+
+  What it checks:
 - Format validation
 - MX records & domain reachability
 - Disposable email detection
@@ -129,7 +125,7 @@ phantomeye email target@example.com --output html
 
 ### IP Reconnaissance
 
-```bash
+  bash
 # Basic IP recon
 phantomeye ip 8.8.8.8
 
@@ -138,9 +134,9 @@ phantomeye ip 8.8.8.8 --shodan
 
 # Hostname (auto-resolves to IP)
 phantomeye ip evil.example.com
-```
 
-**What it checks:**
+
+What it checks:**
 - ipinfo.io geolocation
 - ip-api.com (continent, city, ISP, ASN)
 - Reverse DNS
@@ -149,7 +145,7 @@ phantomeye ip evil.example.com
 
 ### Domain Recon
 
-```bash
+   bash
 # Full domain investigation
 phantomeye domain example.com
 
@@ -158,9 +154,9 @@ phantomeye domain example.com --subdomains
 
 # Generate HTML report
 phantomeye domain example.com --output html --subdomains
-```
 
-**What it checks:**
+
+What it checks:
 - WHOIS registration data
 - DNS records (A, AAAA, MX, NS, TXT, CNAME, SOA, CAA)
 - SSL certificate details & SAN domains
@@ -171,15 +167,14 @@ phantomeye domain example.com --output html --subdomains
 
 ### Phone OSINT
 
-```bash
-# International format (recommended)
-phantomeye phone +14155552671
+   bash
 
-# Without country code
-phantomeye phone 14155552671
-```
+phantomeye phone +918976534234
 
-**What it checks:**
+phantomeye phone +917898098745
+
+
+What it checks:
 - Number format validation
 - Country, carrier, line type (via phonenumbers library)
 - Region description
@@ -188,13 +183,12 @@ phantomeye phone 14155552671
 
 ### Session History
 
-```bash
-# List past 20 sessions
+bash
+
 phantomeye history
 
-# List past 50 sessions
 phantomeye history --limit 50
-```
+
 
 ---
 
@@ -202,9 +196,9 @@ phantomeye history --limit 50
 
 | Format | Location |
 |--------|----------|
-| **Rich terminal** | Always displayed in the console |
-| **JSON** | `~/.phantomeye/reports/phantomeye_<type>_<target>_<ts>.json` |
-| **HTML** | `~/.phantomeye/reports/phantomeye_<type>_<target>_<ts>.html` |
+| Rich terminal | Always displayed in the console |
+| JSON | `~/.phantomeye/reports/phantomeye_<type>_<target>_<ts>.json` |
+| HTML | `~/.phantomeye/reports/phantomeye_<type>_<target>_<ts>.html` |
 
 HTML reports include:
 - Dark-themed interface
@@ -215,13 +209,13 @@ HTML reports include:
 
 ## 🤖 AI Analysis
 
-PhantomEye uses **Claude claude-sonnet-4-20250514** to transform raw OSINT data into actionable intelligence reports.
+PhantomEye uses Claude claude-sonnet-4-20250514 to transform raw OSINT data into actionable intelligence reports.
 
 Each AI report includes:
-- **Intelligence Summary** — Top findings at a glance
-- **Pattern Analysis** — What the data reveals about the target
-- **Risk Assessment** — Threat indicators and concerns
-- **Recommended Next Steps** — Specific follow-up actions
+- Intelligence Summary — Top findings at a glance
+- Pattern Analysis — What the data reveals about the target
+- Risk Assessment — Threat indicators and concerns
+- Recommended Next Steps — Specific follow-up actions
 
 To enable AI analysis, set your Anthropic API key:
 ```bash
@@ -234,7 +228,6 @@ Use `--no-ai` to skip AI analysis on any command.
 
 ## 🏗️ Project Structure
 
-```
 phantomeye/
 ├── phantomeye/
 │   ├── __init__.py
@@ -255,7 +248,6 @@ phantomeye/
 ├── setup.py
 ├── install.sh                  # Kali Linux one-command installer
 └── README.md
-```
 
 ---
 
@@ -289,14 +281,14 @@ phantomeye/
 
 Contributions welcome! To add a new platform to username recon, simply add it to the `PLATFORMS` dictionary in `phantomeye/modules/username_recon.py`:
 
-```python
+   python
 "NewPlatform": {
     "url": "https://newplatform.com/{}",
     "check": "status",   # or "text"
     "code": 200,         # expected status code
     # "needle": "text",  # if check == "text"
 },
-```
+
 
 ---
 
@@ -306,4 +298,3 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-*Built with 🐍 Python · Powered by 🤖 Claude claude-sonnet-4-20250514 · Runs on 🐉 Kali Linux*

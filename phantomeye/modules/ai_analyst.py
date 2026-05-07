@@ -14,13 +14,11 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 
 console = Console()
 
-# ── Provider endpoints ─────────────────────────────────────────────────────────
 OLLAMA_URL  = "http://localhost:11434/api/generate"
 GROQ_URL    = "https://api.groq.com/openai/v1/chat/completions"
 GEMINI_URL  = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
 
-# ── Default models per provider ────────────────────────────────────────────────
 DEFAULT_MODELS = {
     "ollama":     "mistral",
     "groq":       "llama-3.1-70b-versatile",
@@ -28,7 +26,6 @@ DEFAULT_MODELS = {
     "anthropic":  "claude-sonnet-4-20250514",
 }
 
-# ── System prompt (shared across all providers) ────────────────────────────────
 SYSTEM_PROMPT = """You are PhantomEye's AI Analyst — an expert OSINT intelligence officer.
 Your task is to synthesize raw reconnaissance data into a structured, actionable intelligence report.
 
@@ -47,8 +44,6 @@ Guidelines:
 Ethical reminder: This tool is for authorized security research, penetration testing,
 and legitimate OSINT investigations only. Always operate within legal boundaries."""
 
-
-# ── Prompt templates ───────────────────────────────────────────────────────────
 PROMPT_TEMPLATES = {
     "username": """Analyse the following username OSINT data for target: {target}
 
@@ -115,11 +110,6 @@ Provide:
 5. **Recommended Next Steps** — Specific follow-up actions""",
 }
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# AI Analyst class
-# ─────────────────────────────────────────────────────────────────────────────
-
 class AIAnalyst:
     def __init__(self, api_key: str = "", provider: str = "", model: str = ""):
         """
@@ -141,8 +131,6 @@ class AIAnalyst:
             f"[dim]AI provider: [bold]{self.provider}[/bold] · model: [bold]{self.model}[/bold][/dim]"
         )
 
-    # ── Auto-detect ────────────────────────────────────────────────────────────
-
     def _auto_detect_provider(self, api_key: str) -> str:
         """Pick the best provider based on what's configured."""
         if api_key:
@@ -154,7 +142,6 @@ class AIAnalyst:
             if len(api_key) > 30:
                 return "gemini"
 
-        # Fall back to local Ollama
         try:
             r = requests.get("http://localhost:11434/api/tags", timeout=3)
             if r.status_code == 200:
@@ -162,10 +149,8 @@ class AIAnalyst:
         except Exception:
             pass
 
-        return "ollama"   # default — user will get a helpful error if not running
-
-    # ── Main entry point ───────────────────────────────────────────────────────
-
+        return "ollama"   
+    
     def analyse(self, target_type: str, target: str, data: dict) -> str:
         template = PROMPT_TEMPLATES.get(target_type, PROMPT_TEMPLATES["username"])
         prompt = template.format(
@@ -195,8 +180,6 @@ class AIAnalyst:
         ) as prog:
             prog.add_task("", total=None)
             return fn(prompt)
-
-    # ── Ollama (local, free) ───────────────────────────────────────────────────
 
     def _call_ollama(self, prompt: str) -> str:
         full_prompt = f"{SYSTEM_PROMPT}\n\n{prompt}"
@@ -228,8 +211,6 @@ class AIAnalyst:
             )
         except Exception as e:
             return f"❌ Ollama error: {e}"
-
-    # ── Groq (free tier — fast) ────────────────────────────────────────────────
 
     def _call_groq(self, prompt: str) -> str:
         if not self.api_key:
@@ -269,8 +250,6 @@ class AIAnalyst:
         except Exception as e:
             return f"❌ Groq error: {e}"
 
-    # ── Google Gemini (free — 1500 req/day) ───────────────────────────────────
-
     def _call_gemini(self, prompt: str) -> str:
         if not self.api_key:
             return (
@@ -307,8 +286,6 @@ class AIAnalyst:
             return "❌ Gemini request timed out (60s)."
         except Exception as e:
             return f"❌ Gemini error: {e}"
-
-    # ── Anthropic Claude (paid) ────────────────────────────────────────────────
 
     def _call_anthropic(self, prompt: str) -> str:
         if not self.api_key:
