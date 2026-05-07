@@ -13,7 +13,7 @@ BANNER = r"""
 """
 
 TAGLINE = "  AI-Powered OSINT Intelligence Framework  |  v1.0.0  |  Kali Linux"
-AUTHOR  = "  github.com/349100/phantomeye"
+AUTHOR  =  "Aman Kumar Panda"
 
 
 def print_banner():
